@@ -1,14 +1,9 @@
+import { readLines } from '../utils/fs.ts';
+
 export {}
 
-// Read file. Should make this a utility function.
-using file = await Deno.open("input.txt", { read: true });
-const fileInfo = await file.stat();
-const buf = new Uint8Array(fileInfo.size);
-await file.read(buf);
-const text:string = new TextDecoder().decode(buf);
-
 // Parse lines, filtering out the newline at the end.
-const lines:string[][] = text.split('\n').map(x => x.split('   ')).filter(x => x.length > 1);
+const lines:string[][] = (await readLines("input.txt")).map(x => x.split('   ')).filter(x => x.length > 1);
 
 // Get and sort both lists in ascending order
 const firsts:number[] = lines.map(x => Number(x[0])).toSorted()

@@ -1,14 +1,9 @@
+import { readLines } from '../utils/fs.ts';
+
 export {}
 
-// Read file. Should make this a utility function.
-using file = await Deno.open("input.txt", { read: true });
-const fileInfo = await file.stat();
-const buf = new Uint8Array(fileInfo.size);
-await file.read(buf);
-const text:string = new TextDecoder().decode(buf);
-
 // Parse lines, filtering out the newline at the end.
-const lines:number[][] = text.split('\n').map(x => x.split(' ').map(y => Number(y))).filter(x => x.length > 1);
+const lines:number[][] = (await readLines("input.txt")).map(x => x.split(' ').map(y => Number(y))).filter(x => x.length > 1);
 
 // "Safe" lines must satisfy both conditions:
 // 1: All numbers either ascending or descending
