@@ -10,3 +10,8 @@ export async function readLines(filename:string): Promise<string[]> {
     const text:string = await readText(filename);
     return text.trim().split('\n');
 }
+
+export async function readGrid(filename:string): Promise<string[][]> {
+    const lines:string[] = await readLines(filename);
+    return lines.map(x => [...x])
+}
