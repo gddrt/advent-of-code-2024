@@ -2,7 +2,6 @@ import { readLines } from '../utils/fs.ts';
 
 export {}
 
-// Turns text input into a character grid
 const input = await readLines("input.txt");
 
 // Filter the rules part of the input
@@ -56,19 +55,21 @@ const invalidUpdates: number[][] = updates.filter(x => !validateUpdate(x));
 // eg. for each broken rule, we put the second page immediately after the first
 // and then retry until it works.
 const fixedUpdates: number[][] = invalidUpdates.map(y => {
+    // Optimize performance by getting the applicable rules only once per entry
+    // Applicable rules are rules which have both numbers in the update
+    const applicableRules = rules.filter(([a, b]) => y.indexOf(a) !== -1 && y.indexOf(b) !== -1)
+
     let x = [...y];
+
     outer: while (true) {
-        inner: for (let i=0; i<rules.length; i++) {
-            const indexA = x.indexOf(rules[i][0]);
-            const indexB = x.indexOf(rules[i][1]);
-    
-            // If one page in the rule does not exist, the rule does not apply.
-            if (indexA === -1 || indexB === -1) continue;
+        inner: for (let i=0; i<applicableRules.length; i++) {
+            const indexA = x.indexOf(applicableRules[i][0]);
+            const indexB = x.indexOf(applicableRules[i][1]);
     
             // If the second page does not come after the first page,
             // we fix it and then try again
             if (indexA > indexB) {
-                x = [...x.slice(0, indexB), rules[i][0], rules[i][1], ...x.slice(indexB + 1, indexA), ...x.slice(indexA + 1)]
+                x = [...x.slice(0, indexB), applicableRules[i][0], applicableRules[i][1], ...x.slice(indexB + 1, indexA), ...x.slice(indexA + 1)]
                 continue outer;
             }
         }
