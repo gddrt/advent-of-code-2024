@@ -7,10 +7,7 @@ type Equation = [number, number[]]
 const equations: Equation[] = input.map(x => x.split(': ')).map(x => [Number(x[0]), x[1].split(' ').map(Number)])
 
 const recursivelyOperate = (targetNum: number, firstNum: number, remainingNums: number[]) => {
-    if (remainingNums.length === 1) return (
-        firstNum * remainingNums[0] === targetNum
-        || firstNum + remainingNums[0] === targetNum
-    )
+    if (remainingNums.length === 0) return targetNum === firstNum;
 
     const newRemainingNums = remainingNums.slice(1);
     return (
